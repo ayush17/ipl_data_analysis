@@ -1,5 +1,5 @@
 
-  //------------------------------first function
+  //------------------------------calculation of matches Per Year
   // eslint-disable-next-line no-unused-vars
   function matchesPerYear(matches, deliveries) {
     let matchesPeryear = matches.reduce((accummulatorOfMatches, match) => {
@@ -11,8 +11,8 @@
     return matchesPeryear;
   }
 
-  //-----------------------------second function
-  // eslint-disable-next-line no-unused-vars
+  //-----------------------------calculation of count of matches
+  // eslint-disable-next-line no-unused-vars 
    function countOfMatches(matches, deliveries) {
     let MatchesWonByteamPearYear = matches.reduce((accumulatorOfteams, match) => {
       if (match['winner'] !== '') {
@@ -28,9 +28,9 @@
   }
   //---------------------------------------------------
 
-  //----------------------------third task
-  function extraRunsScored(matches, deliveries) {
-    let matchId = matches.filter(m => m.season === '2016').map(m => m.id);
+  //----------------------------extra runs scored are generated here
+  function extraRunsScored(matches, deliveries,season) {
+    let matchId = matches.filter(m => m.season === season).map(m => m.id);//creating match id's array
     let extraRuns = deliveries.reduce((tempExtraRuns, delivery) => {
       if (matchId.includes(delivery.match_id)) {
         tempExtraRuns[delivery['bowling_team']] =
@@ -43,10 +43,10 @@
     return extraRuns;
   }
 
-  //-----------------------fourth task
-  function top10EconomicBowlers(matches, deliveries) {
+  //-----------------------top ten economic bowlers are calculated here for any season
+  function top10EconomicBowlers(matches, deliveries,season) {
     let matchId = matches
-      .filter(match => match.season === '2015')
+      .filter(match => match.season === season)
       .map(match => match.id); //generating matchId's array
     const listOfPalyerstheirEconomies = deliveries.reduce(
       (perPlayerTotalRunsAndBalls, devlivery) => {

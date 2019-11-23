@@ -5,7 +5,7 @@ let deliveries=csvtojson.fieldDelimiter(',').getJsonFromCsv("../data/deliveries.
 const fr=require('./ipl.js');
 //extra runs function called
       
-   var extrarun=fr.extraRunsScored(matches, deliveries)
+   var extrarun=fr.extraRunsScored(matches, deliveries,'2016')
    var converting_extrarun_to_string=JSON.stringify(extrarun)//converting objects to string
    fs.writeFileSync("../output/Extra_Runs_Scored.json",converting_extrarun_to_string,'utf-8')
 //----------------------------   
@@ -22,7 +22,7 @@ const fr=require('./ipl.js');
       fs.writeFileSync("../output/Matches_Per_Year.json",converting_Matchesperyear_to_string,'utf-8')
    //----------------------------      
 //top 10 economic bowlers      
-var bowlers=fr.top10EconomicBowlers(matches, deliveries)
+var bowlers=fr.top10EconomicBowlers(matches, deliveries,'2015')
 var converting_bowlers_to_string=JSON.stringify(bowlers)//converting objects to string
 
 fs.writeFileSync("../output/Top_Ten_Economic_Bowlers.json",converting_bowlers_to_string,'utf-8')
