@@ -26,3 +26,9 @@ var bowlers=fr.top10EconomicBowlers(matches, deliveries,'2015')
 var converting_bowlers_to_string=JSON.stringify(bowlers)//converting objects to string
 
 fs.writeFileSync("../output/Top_Ten_Economic_Bowlers.json",converting_bowlers_to_string,'utf-8')
+//review------------------------------
+const frr=require('./review.js');
+var Players=frr.mostValuablePlayer(matches)
+var converting_Players_to_string=JSON.stringify(Players)//converting objects to string
+
+fs.writeFileSync("../output/Valuable_Player.json",converting_Players_to_string,'utf-8')
