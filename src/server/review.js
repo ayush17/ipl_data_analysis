@@ -72,6 +72,7 @@ function strikeRateOfVirat(matches,deliveries,){
     }    
   return acc
   },{})
+  
   let strikeRatePerSeason={}
   let totalruns=0;
   let totalballs=0;
@@ -103,18 +104,35 @@ function strikeRateOfVirat(matches,deliveries,){
 }
 function bowlerWithBestEconomy(deliveries){
   let onlySuperOvers=deliveries.filter(match=>match["is_super_over"]!="0")
+  let balls={};//creating balls per bowler
   
 let collectionOfBowlersWhoBowledInSuperOverWithRuns=onlySuperOvers.reduce((bowlers,matches)=>{
-      if(bowlers[matches["bowler"]])
-        bowlers[matches["bowler"]] +=parseInt(matches["total_runs"])
-      else
+      
+      if(bowlers[matches["bowler"]]){
+         
+        bowlers[matches["bowler"]] +=parseInt(matches["total_runs"]);
+        balls[matches["bowler"]]++;
+        
+      }
+      else{
+      balls[matches["bowler"]]=1;
       bowlers[matches["bowler"]] =parseInt(matches["total_runs"])
+      
+      }
   return bowlers
 },{});
-var arrayOfBestBowlersRuns=Object.values(collectionOfBowlersWhoBowledInSuperOverWithRuns).sort((a,b)=>a-b).slice(0,1)
-var theBestBowlerWhoGaveLeastRuns=[]
+
+let collectionOfBowlersWhoBowledInSuperOverWithEconomies={}
+//divide runs by balls
 for(let key in collectionOfBowlersWhoBowledInSuperOverWithRuns){
-  if(collectionOfBowlersWhoBowledInSuperOverWithRuns[key]==arrayOfBestBowlersRuns[0]){
+  collectionOfBowlersWhoBowledInSuperOverWithEconomies[key]=(collectionOfBowlersWhoBowledInSuperOverWithRuns[key]/balls[key])*6
+}
+
+var arrayOfBestBowlersRuns=Object.values(collectionOfBowlersWhoBowledInSuperOverWithEconomies).sort((a,b)=>a-b).slice(0,1)
+
+var theBestBowlerWhoGaveLeastRuns=[]
+for(let key in collectionOfBowlersWhoBowledInSuperOverWithEconomies){
+  if(collectionOfBowlersWhoBowledInSuperOverWithEconomies[key]==arrayOfBestBowlersRuns[0]){
     theBestBowlerWhoGaveLeastRuns.push(key)
   }
 }
@@ -136,7 +154,28 @@ function highestNumberOfTimesOnePlayerDismissedOther(deliveries){
           }
     return dismissed
    },{});
-   return numberOftimesOnePlayerIsDismissedByOther
+   
+   let arrayOfMaxDismissal=[]
+   for(let key in numberOftimesOnePlayerIsDismissedByOther)
+   arrayOfMaxDismissal.push(Object.values(numberOftimesOnePlayerIsDismissedByOther[key]).sort((a,b)=>b-a).slice(0,1))
+   let obj={}
+   let index=0
+   for(let key in numberOftimesOnePlayerIsDismissedByOther){
+    index++;
+     for(let keys in numberOftimesOnePlayerIsDismissedByOther[key]){
+       if(numberOftimesOnePlayerIsDismissedByOther[key][keys]==arrayOfMaxDismissal[index]){
+         if(obj[key])
+         obj[key][keys]=arrayOfMaxDismissal[index]
+         else{
+         obj[key]={}
+         obj[key][keys]=arrayOfMaxDismissal[index]
+         }
+       }
+     }
+   }
+   
+   
+   return obj;
 }
 module.exports = {
   mostValuablePlayer,
