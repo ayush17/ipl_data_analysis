@@ -73,18 +73,23 @@ function strikeRateOfVirat(matches, deliveries) {
     return perBallruns;
   }, {});
   //generate  matches played per season
-  
+  let totalRuns=0;
+  let totalBalls=0;
 //grouping season wise runs and balls
 let runsAndBallsPerSeason  =matches.reduce((groupingSeasonWiseRunsAndBalls,matchInsideMatches)=>{
     if(groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]){
       if(runsAndBallsPerMatch.hasOwnProperty(matchInsideMatches['id'])){
         if(groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]){
-           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]+=runsAndBallsPerMatch[matchInsideMatches['id']]["runs"];
-           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["balls"]+=runsAndBallsPerMatch[matchInsideMatches['id']]["balls"];   
+          totalRuns=runsAndBallsPerMatch[matchInsideMatches['id']]["runs"];
+          totalBalls=runsAndBallsPerMatch[matchInsideMatches['id']]["balls"]
+           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]+=totalRuns;
+           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["balls"]+=totalBalls;   
         }
         else{
-           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]=runsAndBallsPerMatch[matchInsideMatches['id']]["runs"];
-           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["balls"]=runsAndBallsPerMatch[matchInsideMatches['id']]["balls"];
+          totalRuns=runsAndBallsPerMatch[matchInsideMatches['id']]["runs"];
+          totalBalls=runsAndBallsPerMatch[matchInsideMatches['id']]["balls"];
+           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]=totalRuns;
+           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["balls"]=totalBalls;
     }
       }
     }  
