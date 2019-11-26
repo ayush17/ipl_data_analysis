@@ -1,13 +1,14 @@
 function mostValuablePlayer(matches) {
-  var player = matches.reduce((a, c) => {
-    if (a[c['season']]) {
-      if (a[c['season']][c['player_of_match']])
-        a[c['season']][c['player_of_match']]++;
-      else a[c['season']][c['player_of_match']] = 1;
+  var player = matches.reduce((players, match) => {
+    if (players[match['season']]) {
+      if (players[match['season']][match['player_of_match']])
+        players[match['season']][match['player_of_match']]++;
+      else players[match['season']][match['player_of_match']] = 1;
     } else {
-      a[c['season']] = {};
+      players[match['season']] = {};
+      players[match['season']][match['player_of_match']] = 1
     }
-    return a;
+    return players;
   }, {});
 
   let arrayOfEachSeason = Object.entries(player);
@@ -56,99 +57,91 @@ function teamsWhoWonTheTossAndMatch(matches) {
 }
 
 function strikeRateOfVirat(matches, deliveries) {
-  var runsAndBallsPerMatch = deliveries.reduce((acc, data) => {
-    if (data['batsman'] == 'V Kohli') {
-      if (acc[data['match_id']]) {
-        if (acc[data['match_id']]['runs']) {
-          acc[data['match_id']]['runs'] += parseInt(data['batsman_runs']);
-          acc[data['match_id']]['balls']++;
+  var runsAndBallsPerMatch = deliveries.reduce((perBallruns, delivery) => {
+    if (delivery['batsman'] == 'V Kohli') {
+      if (perBallruns[delivery['match_id']]) {
+        if (perBallruns[delivery['match_id']]['runs']) {
+          perBallruns[delivery['match_id']]['runs'] += parseInt(delivery['batsman_runs']);
+          perBallruns[delivery['match_id']]['balls']++;
         }
       } else {
-        acc[data['match_id']] = {};
-        acc[data['match_id']]['runs'] = parseInt(data['batsman_runs']);
-        acc[data['match_id']]['balls'] = 1;
+        perBallruns[delivery['match_id']] = {};
+        perBallruns[delivery['match_id']]['runs'] = parseInt(delivery['batsman_runs']);
+        perBallruns[delivery['match_id']]['balls'] = 1;
       }
     }
-    return acc;
+    return perBallruns;
   }, {});
-
-  let strikeRatePerSeason = {};
-  let totalruns = 0;
-  let totalballs = 0;
-  for (let matchid in runsAndBallsPerMatch) {
-    for (let id in matches) {
-      if (matchid == matches[id]['id']) {
-        //insert season in new object
-        if (strikeRatePerSeason[matches[id]['season']]) {
-          //add every matches runs and every matches balls
-          totalruns += runsAndBallsPerMatch[matchid]['runs'];
-          totalballs += runsAndBallsPerMatch[matchid]['balls'];
-          //divide runs by balls and multiply by 100
-          //save the result as new strike rate for that season
-          strikeRatePerSeason[matches[id]['season']]['strike_rate'] = (
-            (totalruns / totalballs) *
-            100
-          ).toFixed(2);
-        } else {
-          strikeRatePerSeason[matches[id]['season']] = {};
-          totalruns = 0;
-          totalballs = 0;
+  //generate  matches played per season
+  
+//grouping season wise runs and balls
+let runsAndBallsPerSeason  =matches.reduce((groupingSeasonWiseRunsAndBalls,matchInsideMatches)=>{
+    if(groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]){
+      if(runsAndBallsPerMatch.hasOwnProperty(matchInsideMatches['id'])){
+        if(groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]){
+           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]+=runsAndBallsPerMatch[matchInsideMatches['id']]["runs"];
+           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["balls"]+=runsAndBallsPerMatch[matchInsideMatches['id']]["balls"];   
         }
+        else{
+           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]=runsAndBallsPerMatch[matchInsideMatches['id']]["runs"];
+           groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["balls"]=runsAndBallsPerMatch[matchInsideMatches['id']]["balls"];
+    }
       }
+    }  
+    else{
+      
+      if(runsAndBallsPerMatch.hasOwnProperty(matchInsideMatches['id'])){
+        groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]={};
+        groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["runs"]=runsAndBallsPerMatch[matchInsideMatches['id']]["runs"];
+        groupingSeasonWiseRunsAndBalls[matchInsideMatches["season"]]["balls"]=runsAndBallsPerMatch[matchInsideMatches['id']]["balls"]
     }
   }
+  return groupingSeasonWiseRunsAndBalls;
+  },{});
+ let runsAndBallsPerSeasonIntoArray= Object.entries(runsAndBallsPerSeason)
+   let strikeRateOverAll=runsAndBallsPerSeasonIntoArray.reduce((perSeasonEconomy,perSeasonRunsAndBalls)=>{
+    perSeasonEconomy[perSeasonRunsAndBalls[0]]=(perSeasonRunsAndBalls[1].runs/perSeasonRunsAndBalls[1].balls)*100;
+     return perSeasonEconomy;
+   },{})
+return strikeRateOverAll
 
-  return strikeRatePerSeason;
 }
 function bowlerWithBestEconomy(deliveries) {
   let onlySuperOvers = deliveries.filter(
     match => match['is_super_over'] != '0'
   );
-  let balls = {}; //creating balls per bowler
+   
 
-  let collectionOfBowlersWhoBowledInSuperOverWithRuns = onlySuperOvers.reduce(
+  let collectionOfBowlers = onlySuperOvers.reduce(
     (bowlers, matches) => {
       if (bowlers[matches['bowler']]) {
-        bowlers[matches['bowler']] += parseInt(matches['total_runs']);
-        balls[matches['bowler']]++;
+        bowlers[matches['bowler']]["runs"] += parseInt(matches['total_runs']);
+        bowlers[matches['bowler']]["balls"]++;
       } else {
-        balls[matches['bowler']] = 1;
-        bowlers[matches['bowler']] = parseInt(matches['total_runs']);
+        bowlers[matches['bowler']]= {};
+        bowlers[matches['bowler']]["runs"] = parseInt(matches['total_runs']);
+        bowlers[matches['bowler']]["balls"]=1;
       }
       return bowlers;
     },
     {}
   );
-
-  let collectionOfBowlersWhoBowledInSuperOverWithEconomies = {};
-  //divide runs by balls
-  for (let key in collectionOfBowlersWhoBowledInSuperOverWithRuns) {
-    collectionOfBowlersWhoBowledInSuperOverWithEconomies[key] =
-      (collectionOfBowlersWhoBowledInSuperOverWithRuns[key] / balls[key]) * 6;
-  }
-
-  var arrayOfBestBowlersRuns = Object.values(
-    collectionOfBowlersWhoBowledInSuperOverWithEconomies
-  )
-    .sort((a, b) => a - b)
-    .slice(0, 1);
-
-  var theBestBowlerWhoGaveLeastRuns = [];
-  for (let key in collectionOfBowlersWhoBowledInSuperOverWithEconomies) {
-    if (
-      collectionOfBowlersWhoBowledInSuperOverWithEconomies[key] ==
-      arrayOfBestBowlersRuns[0]
-    ) {
-      theBestBowlerWhoGaveLeastRuns.push(key);
-    }
-  }
-  return theBestBowlerWhoGaveLeastRuns;
+let collectionOfBowlersArray=Object.entries(collectionOfBowlers)
+let bowlersWithEcnonomy=collectionOfBowlersArray.reduce((bowlersEconomy,bowler)=>{
+   bowlersEconomy[bowler[0]]=(bowler[1].runs/bowler[1].balls)*6
+   return bowlersEconomy
+},{});
+let bowlersWithEcnonomyArray=Object.entries(bowlersWithEcnonomy)
+let BestestEconomicBolwer=bowlersWithEcnonomyArray.sort((a,b)=>a[1]-b[1]).slice(0,1);
+return BestestEconomicBolwer;
 }
+
+
 function highestNumberOfTimesOnePlayerDismissedOther(deliveries) {
   let onlyDismissed = deliveries.filter(
-    match => match['player_dismissed'] != ''
+    delivery => delivery['player_dismissed'] != ''
   );
-  let numberOftimesOnePlayerIsDismissedByOther = onlyDismissed.reduce(
+  let DismissedBy = onlyDismissed.reduce(
     (dismissed, matches) => {
       if (dismissed[matches['player_dismissed']]) {
         if (dismissed[matches['player_dismissed']][matches['bowler']])
@@ -163,32 +156,18 @@ function highestNumberOfTimesOnePlayerDismissedOther(deliveries) {
     {}
   );
 
-  let arrayOfMaxDismissal = [];
-  for (let key in numberOftimesOnePlayerIsDismissedByOther)
-    arrayOfMaxDismissal.push(
-      Object.values(numberOftimesOnePlayerIsDismissedByOther[key])
-        .sort((a, b) => b - a)
-        .slice(0, 1)
-    );
-  let highestAmongTheDismissal = {};
-  let index = 0;
-  for (let key in numberOftimesOnePlayerIsDismissedByOther) {
-    for (let keys in numberOftimesOnePlayerIsDismissedByOther[key]) {
-      if (
-        numberOftimesOnePlayerIsDismissedByOther[key][keys] ==
-        arrayOfMaxDismissal[index]
-      ) {
-        if (highestAmongTheDismissal[key]) highestAmongTheDismissal[key][keys] = arrayOfMaxDismissal[index];
-        else {
-          highestAmongTheDismissal[key] = {};
-          highestAmongTheDismissal[key][keys] = arrayOfMaxDismissal[index];
-          index++;
-        }
-      }
-    }
-  }
+let creationOfSingleArrayInValues=Object.entries(DismissedBy).reduce((batsman,bowler)=>{
+  batsman[bowler[0]]=Object.entries(bowler[1]).sort((bowler1,bowler2)=>bowler2[1]-bowler1[1])
+  return batsman;
+}
+,{})
 
-  return highestAmongTheDismissal;
+let dismissed=Object.entries(creationOfSingleArrayInValues).reduce((batsman,bowler)=>
+{
+  batsman[bowler[0]]=bowler[1][0]
+ return batsman;
+},{})
+  return dismissed
 }
 module.exports = {
   mostValuablePlayer,
