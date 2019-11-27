@@ -19,6 +19,9 @@ function matchesPerYear(matches, deliveries) {
 //-----------------------------calculation of count of matches
 // eslint-disable-next-line no-unused-vars
 function countOfMatches(matches, deliveries) {
+  let teams=matches.map((element)=>element.team1)
+  const team=new Set(teams)
+  console.log(team)
   let MatchesWonByteamPearYear = matches.reduce((accumulatorOfteams, match) => {
     if (match['winner'] !== '') {
       if (accumulatorOfteams[match['season']]) {
@@ -30,7 +33,18 @@ function countOfMatches(matches, deliveries) {
     }
     return accumulatorOfteams;
   }, {});
+
+  Object.values(MatchesWonByteamPearYear).forEach((element) => {
+    team.forEach((item) => {
+      if (!element[item]) {
+        element[item] = 0;
+      }
+    });
+  });
+  
   return MatchesWonByteamPearYear;
+
+
 }
 //---------------------------------------------------
 
@@ -81,7 +95,12 @@ function top10EconomicBowlers(matches, deliveries, season) {
 
   const topBolwers = Object.entries(economyOfPlayers)
     .sort((a, b) => a[1] - b[1])
-    .slice(0, 10);
+    .slice(0, 10).reduce((a,b)=>
+    {
+      a[b[0]]=b[1]
+      return a;
+    },{})
+
   return topBolwers;
 }
 module.exports = {

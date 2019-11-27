@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <!--Don't touch this it's highcharts modules-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+
+    <!--?????????????????????????????????????????????????????????????-->
+    <script src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="app.css" />
+  </head>
+  <body>
+    <div>
+      <script>
+        matches_per_year_chart();
+        extra_runs_scored_chart();
+        top_ten_economic_bowlers();
+        count_of_matches();
+      </script>
+
+      <div id="matches_per_year"></div>
+      <div id="extra_runs_scored_chart"></div>
+      <div id="top_ten_economic_bowler"></div>
+      <div id="count_of_matches"></div>
+    </div>
+  </body>
+</html>

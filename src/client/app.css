@@ -1,0 +1,28 @@
+#matches_per_year {
+  max-width: 1000px;
+  min-width: 310px;
+
+  height: 600px;
+  margin: 0 auto;
+}
+#extra_runs_scored_chart {
+  max-width: 1000px;
+  min-width: 310px;
+
+  height: 600px;
+  margin: 0 auto;
+}
+#top_ten_economic_bowler {
+  max-width: 1000px;
+  min-width: 310px;
+
+  height: 600px;
+  margin: 0 auto;
+}
+#count_of_matches {
+  max-width: 1000px;
+  min-width: 310px;
+
+  height: 600px;
+  margin: 0 auto;
+}
