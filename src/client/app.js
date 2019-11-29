@@ -149,41 +149,51 @@ function count_of_matches() {
     .then(json => {
       const arrayOfKeys = Object.keys(json);
 
-      obj1 = Object.entries(json);
+      arrayOfJson = Object.entries(json);
 
-      let y = obj1.reduce((year, currentYear) => {
+      let arrayOfYearAndCurentYear = arrayOfJson.reduce((year, currentYear) => {
         year.push(Object.entries(currentYear[1]));
         return year;
       }, []);
 
-      let arr = [];
-      y.reduce((acc, teamsWithValues) => {
-        teamsWithValues.reduce((a, c) => {
-          arr.push(c);
-          return a;
+      let creatingArrayOfTeamsDismissal = [];
+      arrayOfYearAndCurentYear.reduce((Dummy1, teamsWithValues) => {
+        teamsWithValues.reduce((Dummy2, c) => {
+          creatingArrayOfTeamsDismissal.push(c);
+          return Dummy2;
         }, []);
+        return Dummy1;
       }, []);
 
-      let temp1 = arr.reduce((a, c) => {
-        if (a[c[0]]) {
-          a[c[0]].push(c[1]);
-        } else {
-          a[c[0]] = [];
-          a[c[0]].push(c[1]);
-        }
-        return a;
-      }, []);
+      let collectingEveryDismissedValueForEachTeam = creatingArrayOfTeamsDismissal.reduce(
+        (teamsWithValues, teams) => {
+          if (teamsWithValues[teams[0]]) {
+            teamsWithValues[teams[0]].push(teams[1]);
+          } else {
+            teamsWithValues[teams[0]] = [];
+            teamsWithValues[teams[0]].push(teams[1]);
+          }
+          return teamsWithValues;
+        },
+        []
+      );
 
-      let ca = Object.entries(temp1).reduce((a, b) => {
-        a[b[0]] = b[1];
-        return a;
+      let makingObjectsForEveryteamWithWins = Object.entries(
+        collectingEveryDismissedValueForEachTeam
+      ).reduce((teams, arrayOfWins) => {
+        teams[arrayOfWins[0]] = arrayOfWins[1];
+        return teams;
       }, {});
 
-      let series = Object.entries(ca);
-      series = series.map(element => ({
-        name: element[0],
-        data: element[1]
-      }));
+      let generatingSeriesPatternsWithNameAndValues = Object.entries(
+        makingObjectsForEveryteamWithWins
+      );
+      generatingSeriesPatternsWithNameAndValues = generatingSeriesPatternsWithNameAndValues.map(
+        element => ({
+          name: element[0],
+          data: element[1]
+        })
+      );
 
       Highcharts.chart('count_of_matches', {
         chart: {
@@ -207,7 +217,7 @@ function count_of_matches() {
             stacking: 'normal'
           }
         },
-        series: series
+        series: generatingSeriesPatternsWithNameAndValues
       });
     });
 }
