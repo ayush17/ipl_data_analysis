@@ -66,7 +66,7 @@ fs.writeFileSync(
   'utf-8'
 );
 //strike rate of Virat kholi for each season
-var strikeRateVirat = frr.strikeRateOfVirat(matches, deliveries, 'V Kohli');
+var strikeRateVirat = frr.strikerRateOfPlayer(matches, deliveries, 'V Kohli');
 var converting_strikeRateVirat_to_string = JSON.stringify(strikeRateVirat);
 fs.writeFileSync(
   '../output/Strike_Rate_Of_Virat_Kholi_Every_Season.json',

@@ -19,33 +19,36 @@ function matchesPerYear(matches, deliveries) {
 //-----------------------------calculation of count of matches
 // eslint-disable-next-line no-unused-vars
 function countOfMatches(matches, deliveries) {
-  let teams=matches.map((element)=>element.team1)
- 
-  const team=new Set(teams)
- 
+  let teams = matches.map(element => element.season);
+
+  const team = new Set(teams);
+  let uniqueYears = Array.from(team);
+
   let MatchesWonByteamPearYear = matches.reduce((accumulatorOfteams, match) => {
     if (match['winner'] !== '') {
-      if (accumulatorOfteams[match['season']]) {
-        accumulatorOfteams[match['season']][match['winner']] =
-          accumulatorOfteams[match['season']][match['winner']] + 1 || 1;
+      if (accumulatorOfteams[match['winner']]) {
+        accumulatorOfteams[match['winner']][match['season']] =
+          accumulatorOfteams[match['winner']][match['season']] + 1 || 1;
       } else {
-        accumulatorOfteams[match['season']] = {};
+        accumulatorOfteams[match['winner']] = {};
       }
     }
     return accumulatorOfteams;
   }, {});
-
-  Object.values(MatchesWonByteamPearYear).forEach((element) => {
-    team.forEach((item) => {
-      if (!element[item]) {
-        element[item] = 0;
-      }
-    });
-  });
+  let emptyYears = uniqueYears.reduce((result, item) => {
+    result[item] = 0;
+    return result;
+  }, {});
+  MatchesWonByteamPearYear = Object.entries(MatchesWonByteamPearYear).reduce(
+    (result, winner) => {
+      result[winner[0]] = Object.assign({}, emptyYears, winner[1]);
+      return result;
+    },
+    {}
+  );
   
+
   return MatchesWonByteamPearYear;
-
-
 }
 //---------------------------------------------------
 
@@ -96,11 +99,11 @@ function top10EconomicBowlers(matches, deliveries, season) {
 
   const topBolwers = Object.entries(economyOfPlayers)
     .sort((a, b) => a[1] - b[1])
-    .slice(0, 10).reduce((a,b)=>
-    {
-      a[b[0]]=b[1]
+    .slice(0, 10)
+    .reduce((a, b) => {
+      a[b[0]] = b[1];
       return a;
-    },{})
+    }, {});
 
   return topBolwers;
 }
