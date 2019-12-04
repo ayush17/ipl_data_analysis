@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 function matches_per_year_chart() {
   fetch('../output/Matches_Per_Year.json')
     .then(response => response.json())
@@ -149,7 +150,7 @@ function count_of_matches() {
     .then(json => {
       const arrayOfKeys = Object.keys(json);
 
-      arrayOfJson = Object.entries(json);
+      let arrayOfJson = Object.entries(json);
 
       let arrayOfYearAndCurentYear = arrayOfJson.reduce((year, currentYear) => {
         year.push(Object.entries(currentYear[1]));
@@ -221,3 +222,7 @@ function count_of_matches() {
       });
     });
 }
+      matches_per_year_chart();
+      extra_runs_scored_chart();
+      top_ten_economic_bowlers();
+      count_of_matches();
