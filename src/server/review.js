@@ -36,24 +36,17 @@ function mostValuablePlayer(matches) {
   return mostValuablePlayerPerSeason;
 }
 function teamsWhoWonTheTossAndMatch(matches) {
-  var arrayOfEveryObjectsValues = matches.reduce((object, objectvalues) => {
-    //pushing every object values inside matches as array
-    object.push(Object.values(objectvalues));
-    return object;
-  }, []);
-  arrayOfEveryObjectsValues;
-  var filteredArrayOfEveryObjectsValues = arrayOfEveryObjectsValues.filter(
-    first => first[6] == first[10]
-  ); //filtering only those matches in which toss and winner team are same
-  var countOfTeamsWhoWonTheMatchAndToss = filteredArrayOfEveryObjectsValues.reduce(
-    (acc, array) => {
-      if (acc[array[6]]) acc[array[6]]++;
-      else acc[array[6]] = 1;
-      return acc;
+  var onlyThoseObjectsInWhichTossWinnerAndMatchWinnerAreSame=matches.filter((match)=>match["toss_winner"]==match["winner"]); 
+  var teamsWhoWonMatchAndToss = onlyThoseObjectsInWhichTossWinnerAndMatchWinnerAreSame.reduce((countOfTeamsWhoWonTheMatchAndToss, matches) => {
+      if (countOfTeamsWhoWonTheMatchAndToss[matches["toss_winner"]]) 
+        countOfTeamsWhoWonTheMatchAndToss[matches["toss_winner"]]++;
+      else countOfTeamsWhoWonTheMatchAndToss[matches["toss_winner"]] = 1;
+      return countOfTeamsWhoWonTheMatchAndToss;
     },
     {}
   );
-  return countOfTeamsWhoWonTheMatchAndToss;
+  
+  return teamsWhoWonMatchAndToss;
 }
 
 function strikeRateOfVirat(matches, deliveries, player) {

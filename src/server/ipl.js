@@ -20,8 +20,9 @@ function matchesPerYear(matches, deliveries) {
 // eslint-disable-next-line no-unused-vars
 function countOfMatches(matches, deliveries) {
   let teams=matches.map((element)=>element.team1)
+ 
   const team=new Set(teams)
-  console.log(team)
+ 
   let MatchesWonByteamPearYear = matches.reduce((accumulatorOfteams, match) => {
     if (match['winner'] !== '') {
       if (accumulatorOfteams[match['season']]) {
